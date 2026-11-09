@@ -1,0 +1,7 @@
+[33mcommit a203f79684ad8828ba38525cbb8490c4acd2acd4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author:     Ivan Šimac <isimac@veleri.hr>
+AuthorDate: Sun Nov 8 22:57:21 2026 +0100
+Commit:     Ivan Šimac <isimac@veleri.hr>
+CommitDate: Sun Nov 8 22:57:21 2026 +0100
+
+    Inicijalni Laravel projekt; samo instalacija
