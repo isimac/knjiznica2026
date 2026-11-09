@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('posudba', function (Blueprint $table) {
             $table->id();
-            $table->string('test');
             $table->timestamps();
         });
     }
