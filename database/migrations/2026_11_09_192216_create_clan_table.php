@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('ime');
             $table->string('prezime');
-            $table->string('broj_mobitela');
+            $table->string('brojMobitela');
             $table->string('email')->nullable();
-            $table->string('clanski_broj')->unique();
+            $table->string('clanskiBroj')->unique();
             $table->timestamps();
         });
     }
