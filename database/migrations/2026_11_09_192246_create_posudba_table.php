@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('posudba', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('clan_id')->constrained('clan')->restrictOnDelete();
+            $table->foreignId('primjerak_id')->constrained('primjerak')->restrictOnDelete();
+            $table->date('datumPosudbe');
+            $table->date('datumPovrata');
+            $table->unsignedSmallInteger('brojDanaKanjenja');
+            $table->boolean('zakasninaPlacena');
             $table->timestamps();
         });
     }
