@@ -13,7 +13,7 @@ class Primjerak extends Model
 
     public function knjiga(): BelongsTo
     {
-        return $this->belongsTo(Primjerak::class, "knjiga_id");#knjiga_id spaja knjiga i primjerak i zato ide 
+        return $this->belongsTo(Knjiga::class, "knjiga_id");#knjiga_id spaja knjiga i primjerak i zato ide 
     }
 
     public function posudba(): HasMany
