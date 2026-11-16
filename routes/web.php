@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KnjigaController;#moramo dodati kontroler
+use App\Http\Controllers\PrimjerakController;
 
 Route::get('/', function () {
     return redirect()->route('knjige.index');#nemoj mi pokazivati početnu stranicu, preusmjeri me na rutu knjige.index; redirect->ako negdje zapnemo kada refreshamo preko http protokola šaljemo želju da se ponovno osvježe svi podaci
@@ -16,3 +17,9 @@ Route::put('knjige/{knjiga}', [KnjigaController::class, 'update'])->name('knjige
 Route::delete('/knjige/{knjiga}', [KnjigaController::class, 'destroy'])->name('knjige.destroy');
 
 Route::get('/knjige/{knjiga}', [KnjigaController::class, 'show'])->name('knjige.show');
+
+Route::get('/knjige/{knjiga}/primjerci/create', [PrimjerakController::class, 'create'])->name('primjerci.create');
+Route::post('/knjige/{knjiga}', [PrimjerakController::class, 'store'])->name('primjerci.store');
+Route::get('/primjerci/{primjerak}/edit', [PrimjerakController::class, 'edit'])->name('primjerci.edit');
+Route::put('/primjerci/{primjerak}', [PrimjerakController::class, 'update'])->name('primjerci.update');
+Route::delete('/primjerci/{primjerak}', [PrimjerakController::class, 'destroy'])->name('primjerci.destroy');
