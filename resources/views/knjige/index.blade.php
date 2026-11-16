@@ -20,6 +20,10 @@
         {{session('uspjeh')}}
     @endif
 
+    @if(session('greska'))
+        {{session('greska')}}
+    @endif
+
     <h3><strong>Popis knjiga</strong></h3>
 
     @if($knjige->isEmpty())
@@ -42,7 +46,7 @@
                 @foreach($knjige as $knjiga)
                     <tr>
                         <td>{{$knjiga->id}}</td>
-                        <td>{{$knjiga->naslov}}</td>
+                        <td><a href="{{route('knjige.show', $knjiga)}}">{{$knjiga->naslov}}</a></td>
                         <td>{{$knjiga->autor}}</td>
                         <td>{{$knjiga->isbn ?? 'nema podatka'}}</td>
                         <td>{{$knjiga->godinaIzdanja}}</td>

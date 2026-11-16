@@ -40,4 +40,46 @@ class KnjigaController extends Controller
 
         return redirect()->route('knjige.index')->with('uspjeh', 'Knjiga je uspješno nadodana');
     }
+
+    public function update(Request $request, Knjiga $knjiga): RedirectResponse
+    {
+        $podaci=$request->validate([
+            'naslov'=>['required', 'string', 'max:255'],
+            'autor'=>['required', 'string', 'max:255'],
+            'isbn'=>['nullable', 'digits:13', Rule::unique('knjiga', 'isbn')->ignore($knjiga->id)],
+            'godinaIzdanja'=>['required', 'integer', 'between:1900, '.date('Y')]
+        ]);
+        $podaci['isbn']=$podaci['isbn'] ?? null;
+        $knjiga->update($podaci);
+
+        return redirect()->route('knjige.index')->with('uspjeh', 'Podatci o knjizi uspješno izmijenjeni');
+    }
+
+    public function destroy(Knjiga $knjiga): RedirectResponse
+    {
+        //ukoliko knjiga ima primjerke, tada ne smijemo brisati
+        if ($knjiga->primjerak()->exists())
+            {
+                return redirect()->route('knjige.index')->with('greska', 'Knjiga ne može biti obrisana jer ima evidentirane primjerke');
+            }
+        $knjiga->delete();
+        return redirect()->route('knjige.index')->with('uspjeh', 'Knjiga je uspješno obrisana');
+    }
+
+    public function edit(Knjiga $knjiga)
+    {
+        return view('knjige.edit', compact('knjiga'));
+        //return view('knjige.edit', ['knjiga' => $knjiga]);
+    }
+
+    public function show(Knjiga $knjiga): View
+    {
+        $knjiga->load(['primjerak'=>function ($upit)
+        {
+            //$knjiga->load('primjerak);
+           $upit->orderBy('inventarniBroj'); 
+        }]);
+
+        return view('knjige.show',['knjiga'=>$knjiga]);
+    }
 }
