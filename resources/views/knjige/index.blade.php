@@ -4,16 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Knjižnica-popis knjiga</title>
+    <style> 
+    td {
+        text-align:center; Background-color:aqua;
+    }
+    </style>
+
 </head>
 <body>
     <h1>Informacijski sustav knjižnice</h1>
-    <a href
-        <h3><strong>Popis knjiga</strong></h3>
+    <a href="{{route('knjige.create')}}">Dodaj novu knjigu</a>
+    @if(session('uspjeh'))
+    {{ssesion('uspjeh')}}
+    @endif
 
+        <h3><strong>Popis knjiga</strong></h3>
         @if($knjige->isEmpty())
         <p>U knjižnici nema knjiga</p>
         @else
-        <table>
+        <table border='1'>
             <theas>
                 <tr>
                     <th>ID</th>
@@ -21,6 +30,8 @@
                     <th>Autor</th>
                      <th>ISBN</th>
                       <th>Godina izdanaj</th>
+                      <th>Broj primjeraka</th>
+                      <th>Akcije</th>
                    </tr>
             </thead>
 
@@ -32,6 +43,16 @@
                       <td>{{$knjiga->autor}}</td>
                        <td>{{$knjiga->isbn?? 'nema podatka'}}</td>
                          <td>{{$knjiga->godinaIzdanja}}</td>
+                         <td>{{ $knjiga->primjerak_count }}</td>
+
+                         <td><a href="{{route('knjige.edit',$knjiga)}}">Uredi</a>
+                         <form action="{{route('knjige.destroy',$knjiga)}}"method="POST"
+                         onsubmit="return confirm('Želite li obrisati knjigu?');">
+                         @csrf 
+                         @method('DELETE')
+                         <button tybe="submit">Obriši</button>
+                         </form>
+                         </td>
 </tr>
                 @endforeach
 </tbody>

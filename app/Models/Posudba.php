@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Posudba extends Model
 {
     protected $table="posudba";
-      protected $filable=[ 'clan_id', 'primjerak_id','datumPosudbe', 'datumPovrata', 'brojDanaKasnjenja', 'zakasninaPlacena']
+      protected $filable=[ 'clan_id', 'primjerak_id','datumPosudbe', 'datumPovrata', 'brojDanaKasnjenja', 'zakasninaPlacena'];
+      
 
      public function clan(): BelongsTo
     {

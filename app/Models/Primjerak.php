@@ -17,5 +17,6 @@ class Primjerak extends Model
      public function posudba(): HasMany
     {
         return $this->hasMany(Posudba::class, 'primjerak_id');
+        
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Knjiga extends Model
 {
     protected $table="knjiga";
-    protected $fillable=['naslov', 'autor' , 'isbn', 'godinaIzadanja'];
+    protected $fillable=['naslov', 'autor' , 'isbn', 'godinaIzdanja'];
 
     public function primjerak():HasMany
     {

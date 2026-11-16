@@ -12,8 +12,8 @@ class KnjigaController extends Controller
 {
    public function index(): View
    {
-    $knjiga=Knjiga::orderBy('naslov')->get();
-     $knjiga=Knjiga::withCount('primjerak')->orderBy('naslov')->get();
+
+     $knjige=Knjiga::withCount('primjerak')->orderBy('naslov')->get();
 
     return view('knjige.index', ['knjige'=>$knjige]);
    }
@@ -22,9 +22,9 @@ class KnjigaController extends Controller
     return view('knjige.create');
    }
    
-   public function store(Request $request): RedirectRespond
+   public function store(Request $request): RedirectResponse
    {
-    $podaci=$requerd->validate([
+    $podaci=$request->validate([
                'naslov'=>['required','string','max:255'],
                'autor'=>['required','string', 'max:255'],
                'isbn'=>['nullable','digits:13', Rule::unique('knjiga','isbn')],
@@ -33,7 +33,8 @@ class KnjigaController extends Controller
     ]);
     $podaci['isbn']=$podaci['isbn'] ?? null;
     Knjiga::create($podaci);
-    return redirect()->route('knjige.index')->with
-   }
+    return redirect()->route('knjige.index')->with('Uspjeh','Knjiga je uspješno nadodana');
 
+
+}
 }

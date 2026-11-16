@@ -10,15 +10,18 @@
     <form action="{{route('knjige.store')}}" method="POST">
         @csrf
         <label>Naslov</label>
-        <input type="text" name="naslov" required maxlength="225" value="{{old(naslov)}}">
+        <input type="text" name="naslov" required maxlength="225" value="{{old('naslov')}}">
          <label>Autor</label>
-        <input type="text" name="autor" required maxlength="225" value="{{old(autor)}}">
+        <input type="text" name="autor" required maxlength="225" value="{{old('autor')}}">
          <label>ISBN</label>
-        <input type="text" name="isbn"  maxlength="13" value="{{old(naslov)}}">
+        <input type="text" name="isbn"  maxlength="13" value="{{old('isbn')}}">
+        @error('isbn')
+        <p>{{message}}</p>
+        @enderror
          <label>Godina izdanaj</label>
-        <input type="number" name="godinaIzdanja" required min="1900" max="{{old(naslov)}}">
+        <input type="number" name="godinaIzdanja" required min="1900" max="{{old('godinaIzdanja')}}">
         <button type="submit">Spremi knjigu</button>
-
+</form>
         
         
 </body>

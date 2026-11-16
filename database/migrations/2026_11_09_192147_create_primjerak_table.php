@@ -8,14 +8,15 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     */
+     */exit
     public function up(): void
     {
         Schema::create('primjerak', function (Blueprint $table) {
             $table->id();
             $table->string('inventarniBroj')->unique;
-            $table->foreignId('knjiga id')->constrained('knjiga')->restrictOnDelete();
+            $table->foreignId('knjiga_id')->constrained('knjiga')->restrictOnDelete();
             $table->timestamps();
+            
         });
     }
 
