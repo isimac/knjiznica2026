@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('primjerak id')->constrained('primjerak')->restrictOnDelete();
             $table->date('datumPosudbe');
             $table->date('datumPovrata')->nullable();
-            $table->unsigendSmallInteger('brojDanaKasnjenja');
+            $table->unsignedSmallInteger('brojDanaKasnjenja');
             $table->boolean('zakasninaPlacena');
             $table->timestamps();
         });

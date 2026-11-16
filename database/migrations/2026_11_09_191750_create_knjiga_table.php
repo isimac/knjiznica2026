@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('naslov');
             $table->string('autor');
             $table->string('isbn', 13)->unique()->nullable();
-            $table->unsignedSmallInterger('godinaIzdanja');
+            $table->unsignedSmallInteger('godinaIzdanja');
             $table->timestamps();
         });
     }
