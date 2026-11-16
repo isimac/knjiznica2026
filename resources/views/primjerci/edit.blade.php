@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Uređivanje primjerka</h1>
-    <form action="{{route('primjerci.update', $primjerak->knjiga_id)}}" method="post">
+    <form action="{{route('primjerci.update', $primjerak->id)}}" method="post">
         @csrf
         @method('PUT')
         Inventarni Broj: <input type="text" name="inventarniBroj" required>
