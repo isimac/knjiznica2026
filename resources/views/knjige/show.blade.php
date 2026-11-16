@@ -29,20 +29,38 @@
         <tr>
             <th>ID</th>
             <th>Inventarni broj</th>
+            <th>Akcije</th>
         </tr>
     </thead>
     <tbody>
         @forelse($knjiga->primjerak as $primjerak)
-        <tr>
-            <td>{{$primjerak->id}}</td>
-            <td>{{$primjerak->inventarniBroj}}</td>
-        </tr>
+    <tr>
+        <td>{{ $primjerak->id }}</td>
+        <td>{{ $primjerak->inventarniBroj }}</td>
+
+        <td>
+            <a href="{{ route('primjerci.edit', $primjerak) }}">
+                Uredi
+            </a>
+
+            <form action="{{ route('primjerci.destroy', $primjerak) }}"
+                  method="POST"
+                  style="display:inline;">
+
+                @csrf
+                @method('DELETE')
+
+                <button type="submit">Obriši</button>
+            </form>
+        </td>
+    </tr>
 
         @empty
-        <tr>
-                <td>Ova knjiga nema evidentiranih primjeraka.</td>
-        </tr>
-        @endforelse
+          <tr>
+             <td>Ova knjiga nema evidentiranih primjeraka.
+             </td>
+             </tr>
+    @endforelse
 </tbody>
 </table>
 <p>
