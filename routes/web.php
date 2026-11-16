@@ -14,3 +14,5 @@ Route::post('knjige', [KnjigaController::class, 'store'])->name('knjige.store');
 Route::get('/knjige/{knjiga}/edit', [KnjigaController::class, 'edit'])->name('knjige.edit');
 Route::put('/knjige/{knjiga}', [KnjigaController::class, 'update'])->name('knjige.update');
 Route::delete('/knjige/{knjiga}', [KnjigaController::class, 'destroy'])->name('knjige.destroy');
+
+Route::get('knjige/{knjiga}', [KnjigaController::class, 'show'])->name('knjige.show');
