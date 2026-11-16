@@ -38,4 +38,47 @@ class KnjigaController extends Controller
 
         return redirect()->route('knjige.index')->with('uspjeh', 'Knjiga je uspješno nadodana');#redirectaj me na rutu i s porukom 'knjiga je uspješno nadodana'
     }
+
+    public function update(Request $request, Knjiga $knjiga): RedirectResponse
+    {
+        $podaci = $request->validate([
+            'naslov' => ['required', 'string', 'max:255'],
+            'autor' => ['required', 'string', 'max:255'],
+            'isbn' => ['nullable', 'digits:13', Rule::unique('knjiga', 'isbn')->ignore($knjiga->id)],#ako se dogodit da ne želimo izmijeniti isbn, javljati će da taj isbn već postoji pa nećemo moći spremiti, zato stavljamo taj ignore->provjeri jedinstvenost isbn-a ali zanemari taj koji sada uređujemo
+            'godinaIzdanja' => ['required', 'integer', 'between:1900,'.date('Y')]
+        ]);
+
+        $podaci['isbn'] = $podaci['isbn'] ?? null;
+        $knjiga->update($podaci);#da nismo kao argument stavili $knjiga, tu bismo sada morali raditi Knjiga::update($podaci)
+
+        return redirect()->route('knjige.index')->with('uspjeh','Podaci o knjizi uspješno izmjenjeni!');
+    }
+
+    public function destroy(Knjiga $knjiga): RedirectResponse
+    {
+        #ukoliko knjiga ima primjerke, tada ne smijemo brisati
+        if($knjiga->primjerak()->exists())#ako postoji primjerak koji je u vezi s knjigom
+            {
+                return redirect()->route('knjige.index')->with('greska', 'Knjiga ne može biti obrisana jer ima evidentirane primjerke!');
+            }
+        $knjiga->delete();
+        return redirect()->route('knjige.index')->with('uspjeh','Knjiga je uspješno obrisana');
+    }
+
+    public function edit(Knjiga $knjiga): View
+    {
+        return view('knjige.edit', compact('knjiga'));#compact stvara asocijativni niz
+        #bez compacta bi bilo view('knjige.edit', ['knjiga' => $knjiga])
+    }
+
+    public function show(Knjiga $knjiga): View
+    {   #ako ne želimo sortirati ide samo $knjiga->load('primjerak');
+        $knjiga->load(['primjerak' => function ($upit){#da se učitaju primjerci za dohvaćeni model, želimo da kontroler pripremi sve podatke za prikaz; prikaži ono što je povezano s knjigom
+            #ide primjerak jer se metoda u modelu knjiga zove primjerak
+            #load-> kada si povukao iz baze(get u index), nađi sve što je povezano s modelom koji si povukao
+            $upit->orderBy('inventarniBroj');#ovaj $upit je kao na foru $this; parametar anonimne funkcije, taj $upit se poziva kada se poziva funkcija load, laravel to automatski stvara
+        }]);
+
+        return view('knjige.show', ['knjiga' => $knjiga]);
+    }
 }
