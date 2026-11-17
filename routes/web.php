@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KnjigaController;
 use App\Http\Controllers\PrimjerakController;
+use App\Http\Controllers\ClanController;
 
 Route::get('/', function () {
     return redirect()->route('knjige.index');
@@ -29,3 +30,6 @@ Route::get('/primjerci/{primjerak}/edit', [PrimjerakController::class, 'edit'])-
 Route::put('/primjerci/{primjerak}', [PrimjerakController::class, 'update'])->name('primjerci.update');
 Route::delete('/primjerci/{primjerak}', [PrimjerakController::class, 'destroy'])->name('primjerci.destroy');
 
+//___________________Rute za Clana_______________________________________________________________
+
+Route::resource('clan', ClanController::class)->parameters(['clanovi'=>'clan']);
