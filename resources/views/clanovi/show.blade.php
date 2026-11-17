@@ -15,7 +15,7 @@
 
 <h2>Povijest posudbi</h2>
 
-<p>Ukupan broj evidentiranih posudbi: {{ $clan->posudbe->count() }}</p>
+<p>Ukupan broj evidentiranih posudbi: {{ $clan->posudba->count() }}</p>
 
 <table border="1">
     <thead>
@@ -27,7 +27,7 @@
     </thead>
 
     <tbody>
-        @forelse($clan->posudbe as $posudba)
+        @forelse($clan->posudba as $posudba)
             <tr>
                 <td>{{ $posudba->id }}</td>
                 <td>{{ $posudba->datumPosudbe }}</td>

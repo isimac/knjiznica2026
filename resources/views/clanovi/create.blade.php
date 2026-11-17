@@ -40,9 +40,9 @@
 
     <br><br>
 
-    <label for="brojTelefona">Broj telefona</label>
-    <input type="text" id="brojTelefona" name="brojTelefona" value="{{ old('brojTelefona') }}">
-    @error('brojTelefona') 
+    <label for="brojMobitela">Broj telefona</label>
+    <input type="text" id="brojMobitela" name="brojMobitela" value="{{ old('brojMobitela') }}">
+    @error('brojMobitela') 
     <p>{{ $message }}</p> @enderror
 
     <br>

@@ -29,7 +29,7 @@
 
     <label for="clanskiBroj">Članski broj</label>
     <input type="text" id="clanskiBroj" name="clanskiBroj" value="{{ old('clanskiBroj', $clan->clanskiBroj) }}" required>
-    @error('clanski_broj') 
+    @error('clanskiBroj') 
     <p>{{ $message }}</p> @enderror
 
     <br><br>
@@ -40,9 +40,9 @@
 
     <br><br>
 
-    <label for="brojTelefona">Broj telefona</label>
-    <input type="text" id="brojTelefona" name="brojTelefona" value="{{ old('brojTelefona') }}">
-    @error('brojTelefona') 
+    <label for="brojMobitela">Broj mobitela</label>
+    <input type="text" id="brojMobitela" name="brojMobitela" value="{{ old('brojMobitela', $clan->brojMobitela) }}">
+    @error('brojMobitela') 
     <p>{{ $message }}</p> @enderror
 
     <br>
