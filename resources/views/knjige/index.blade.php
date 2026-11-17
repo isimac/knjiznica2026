@@ -14,6 +14,10 @@
     {{session('uspjeh')}}
     @endif
 
+    @if(session('greska'))
+    {{session('greska')}}
+    @endif
+
     <h3><strong>Popis knjiga</h3>
     
     @if($knjige->isEmpty()) 
@@ -35,14 +39,14 @@
                 @foreach($knjige as $knjiga)
                 <tr>
                     <td>{{$knjiga->id}}</td>
-                    <td>{{$knjiga->naslov}}</td>
+                    <td><a href="{{route('knjige.show', $knjiga)}}">{{$knjiga->naslov}}</a></td>
                     <td>{{$knjiga->autor}}</td>
                     <td>{{$knjiga->isbn ?? 'nema podatka'}}</td>
                     <td>{{$knjiga->godinaIzdanja}}</td>
                     <td>{{$knjiga->primjerak_count}}</td>
                     <td>
                         <a href="{{route('knjige.edit', $knjiga)}}">Uredi</a>
-                        <form action="{{route('knjige.destroy', $knjiga)}}" method="post" onsubmit="return confirm('Zelite li obrisati knjigu)">
+                        <form action="{{route('knjige.destroy', $knjiga)}}" method="post" onsubmit="return confirm('Zelite li obrisati knjigu')">
                         @csrf
                         @method('DELETE')
                         <button type="submit">Obrisi</button>
