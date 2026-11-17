@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KnjigaController;
 use App\Http\Controllers\PrimjerakController;
+use App\Http\Controllers\ClanController;
 
 Route::get('/', function () {
     return redirect()->route('knjige.index');
@@ -37,3 +38,28 @@ Route::put('/primjerci/{primjerak}',[PrimjerakController::class, 'update'])->nam
 
 
 Route::delete('/primjerci/{primjerak}',[PrimjerakController::class, 'destroy'])->name('primjerci.destroy');
+
+
+//Route::resource('clan', ClanController::class)->parameters(['clanovi'=>'clan']);
+
+
+Route::get('/clanovi', [ClanController::class, 'index'])
+    ->name('clanovi.index');
+
+Route::get('/clanovi/create', [ClanController::class, 'create'])
+    ->name('clanovi.create');
+
+Route::post('/clanovi', [ClanController::class, 'store'])
+    ->name('clanovi.store');
+
+Route::get('/clanovi/{clan}', [ClanController::class, 'show'])
+    ->name('clanovi.show');
+
+Route::get('/clanovi/{clan}/edit', [ClanController::class, 'edit'])
+    ->name('clanovi.edit');
+
+Route::put('/clanovi/{clan}', [ClanController::class, 'update'])
+    ->name('clanovi.update');
+
+Route::delete('/clanovi/{clan}', [ClanController::class, 'destroy'])
+    ->name('clanovi.destroy');
