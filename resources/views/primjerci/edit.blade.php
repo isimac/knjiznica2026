@@ -10,7 +10,7 @@
     <form action="{{route('primjerci.update', $primjerak->id)}}" method="post">
         @csrf
         @method('PUT')
-        Inventarni Broj: <input type="text" name="inventarniBroj" required>
+        Inventarni Broj: <input type="text" name="inventarniBroj" required value="{{old('inventarniBroj') ?? $primjerak->inventarniBroj}}">
         <input type="hidden" name="knjiga_id" value='{{$primjerak->knjiga_id}}'>
         <button type="submit">Uredite primjerak knjige</button>
     </form>

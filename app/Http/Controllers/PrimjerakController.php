@@ -19,13 +19,13 @@ class PrimjerakController extends Controller
     public function store(Request $request, Knjiga $knjiga): RedirectResponse
     {
         $podaci = $request->validate([
-            'inventarniBroj' => ['required', 'string','max:255', Rule::unique('primjerak', 'inventarniBroj')],
+            'inventarniBroj' => ['required', 'string','max:13', Rule::unique('primjerak', 'inventarniBroj')],
             'knjiga_id' => ['required']
         ]);
 
         Primjerak::create($podaci);
 
-        return redirect()->route('primjerci.store', $knjiga);
+        return redirect()->route('knjige.show', $knjiga);
     }
 
     public function edit(Primjerak $primjerak): View
@@ -53,7 +53,7 @@ class PrimjerakController extends Controller
                 return redirect()->route('knjige.show', $primjerak->knjiga_id);
             }
         $primjerak->delete();
-        return redirect()->route('knjige.show', $primjerak->knjiga_id);
+        return redirect()->route('knjige.show', $primjerak->knjiga_id)->with('obrisan','Primjerak je uspješno obrisan');
     }
 
 }

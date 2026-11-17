@@ -12,12 +12,12 @@ class Posudba extends Model
 
     //nadodati cast
 
-    protected function primjerak(): BelongsTo
+    public function primjerak(): BelongsTo
     {
         return $this->belongsTo(Primjerak::class, 'primjerak_id');
     }
 
-    protected function clan(): BelongsTo
+    public function clan(): BelongsTo
     {
         return $this->belongsTo(Clan::class, 'clan_id');
     }

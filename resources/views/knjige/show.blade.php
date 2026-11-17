@@ -16,6 +16,9 @@
     <hr>
     <h1>Fizički primjerci</h1>
     <a href="{{route('primjerci.create', $knjiga)}}">Dodaj primjerak</a>
+    @if(session('obrisan'))
+        <p>{{session('obrisan')}}</p>
+    @endif
     <table border="1">
         <thead>
             <tr>

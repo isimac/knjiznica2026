@@ -13,6 +13,7 @@
 </head>
 <body>
     <h1>Informacijski sustav knjižnice</h1>
+    <p><a href="{{route('clanovi.index')}}">Popis članova</a></p>
     <p><a href="{{route('knjige.create')}}">Dodaj novu knjigu</a></p>
 
     @if(session('uspjeh'))<!-- da nam se ispiše poruka kada je nova knjiga spremljena-->
