@@ -14,6 +14,7 @@
         <input type="text" name="inventarniBroj" maxlength="255" required>
         <br>
         <input type="hidden" value="{{$knjiga->id}}" name="knjiga_id">
+        <input type="hidden" value="{{0}}" name="posuden">
         <button type="submit">Dodaj</button>
     </form>
 </body>

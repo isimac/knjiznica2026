@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('inventarniBroj')->unique();
             //foreignId('tablica_polje')->constrained('tablica')->neDajBrisanjeAkoPostojiUNekojDrugojTablici
             $table->foreignId('knjiga_id')->constrained('knjiga')->restrictOnDelete(); //Vanjski kljuc
+            $table->boolean('posuden');
             $table->timestamps();
         });
     }

@@ -16,7 +16,8 @@ class PrimjerakController extends Controller
     public function store(Request $request) {
         $podaci=$request->validate([
             'inventarniBroj'=>['required', 'string', 'max:255', Rule::unique('primjerak', 'inventarniBroj')],
-            'knjiga_id'=>['string']
+            'knjiga_id'=>['string'],
+            'posuden'=>['required']
         ]);
 
         Primjerak::create($podaci);
@@ -30,8 +31,13 @@ class PrimjerakController extends Controller
 
     public function update(Request $request, Primjerak $primjerak) {
         $podaci=$request->validate([
-            'inventarniBroj'=>['required', 'string', 'max:255', Rule::unique('primjerak', 'inventarniBroj')]
+            'inventarniBroj'=>['required', 'string', 'max:255', Rule::unique('primjerak', 'inventarniBroj')],
+            'posuden'=>['required']
             ]);
+
+        if ($primjerak->posudba()->exists()) {
+            return redirect()->route('knjige.index')->with('greska', 'Ne mozete mijenjati podatke primjerka jer postoji aktivni posudba');
+        }
         
         $primjerak->update($podaci);
         return redirect()->route('knjige.index')->with('uspjeh', 'Primjerak je uspjesno azuriran');

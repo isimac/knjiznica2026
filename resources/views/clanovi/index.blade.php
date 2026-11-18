@@ -57,6 +57,9 @@
             </tbody>
         </table>
     @endif
+
+       <p>Povratak na <a href="{{route('knjige.index')}}">popis knjiga</a></p>
+
     
 </body>
 </html>

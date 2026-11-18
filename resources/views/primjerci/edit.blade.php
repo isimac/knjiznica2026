@@ -14,6 +14,7 @@
 
     <label>Inventarni broj:</label>
     <input type="text" name="inventarniBroj" value="{{old('inventarniBroj', $primjerak->inventarniBroj)}}" maxlength="255" required>
+    <input type="hidden" name="posuden" value="0">
     <button>Posalji</button>
     </form>
 </body>

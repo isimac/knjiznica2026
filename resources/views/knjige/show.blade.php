@@ -35,6 +35,7 @@
             <tr>
                 <th>ID</th>
                 <th>Inventarni broj</th>
+                <th>               </th>
             </tr>
         </thead>
 
@@ -51,6 +52,11 @@
                     <button>Obrisi</button>
                 </form>
                 </td>
+                @if(!$primjerak->posuden)
+                <td>
+                    <a href="{{route('posudba.create', $primjerak)}}">Posudi</a>
+                </td>
+                @endif
             </tr>
         
 

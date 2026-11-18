@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Primjerak extends Model
 {
     protected $table="primjerak";
-    protected $fillable=['inventarniBroj', 'knjiga_id']; 
+    protected $fillable=['inventarniBroj', 'knjiga_id', 'posuden']; 
     //knjiga_id je vanjski kljuc, ali u fillable stvaramo sve sto ce stvoriti automatski
     //ako je to automatski al u nekoj drugoj tablici
 

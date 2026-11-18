@@ -9,6 +9,7 @@
     <h1>Informacijski sustav knjiznice</h1>
 
     <p>Idi na <a href="{{route('clan.index')}}">upravljanje clanovima</a></p>
+    <p>Idi na <a href="{{route('posudba.index')}}">upravljanje posudbama</a></p>
 
     <a href="{{route('knjige.create')}}">Dodaj novu knjigu</a>
 

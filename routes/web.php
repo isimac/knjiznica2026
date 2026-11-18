@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KnjigaController;
 use App\Http\Controllers\PrimjerakController;
 use App\Http\Controllers\ClanController;
+use App\Http\Controllers\PosudbaController;
 
 Route::get('/', function () {
     return redirect()->route('knjige.index');
@@ -33,3 +34,11 @@ Route::delete('/primjerci/{primjerak}', [PrimjerakController::class, 'destroy'])
 //___________________Rute za Clana_______________________________________________________________
 
 Route::resource('clan', ClanController::class)->parameters(['clanovi'=>'clan']);
+
+//_____________________Rute za Posudbu___________________________________________________
+
+Route::get('posudbe/index', [PosudbaController::class, 'index'])->name('posudba.index');
+
+Route::get('posudbe/{primjerak}/create', [PosudbaController::class, 'create'])->name('posudba.create');
+Route::post('posudbe', [PosudbaController::class, 'store'])->name('posudba.store');
+
