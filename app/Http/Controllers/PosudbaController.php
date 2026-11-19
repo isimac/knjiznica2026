@@ -32,9 +32,23 @@ class PosudbaController extends Controller
         $podaci['brojDanaKasnjenja']=0;
         $podaci['zakasninaPlacena']=0;
 
+        //Provjera ima li taj clan vec 3 posudene knjige
+        $brojAktivnihPosudbi=Posudba::where('clan_id', $podaci['clan_id'])->count();
+        if ($brojAktivnihPosudbi>2) {
+            return redirect()->route('posudba.index')->with('greska', 'Clan vec ima maksimalan broj posudenih knjiga');
+        }
 
+        //ako clan nema posudene 3 knjige, posudba je dozvoljena
         Posudba::create($podaci);
         Primjerak::where('id', $podaci['primjerak_id'])->update(['posuden'=>'1']);
         return redirect()->route('knjige.index')->with('uspjeh', 'Posudba je uspjesno kreirana');
+    }
+
+    public function destroy(Posudba $posudba) {
+
+        $posudba->primjerak->where('id', $posudba->primjerak_id)->update(['posuden'=>'0']);
+
+        $posudba->delete();
+        return redirect()->route('posudba.index')->with('uspjeh', 'Posudba je uspjesno izbrisana');
     }
 }

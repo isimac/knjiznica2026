@@ -8,11 +8,15 @@
 <body>
     <h1>Upravljanje posudbama</h1>
 
+     @if(session('uspjeh'))
+    {{session('uspjeh')}}
+    @endif
+
+    @if(session('greska'))
+    {{session('greska')}}
+    @endif
+
     <h3><strong>Aktivne posudbe</h3>
-    
-    @if($posudbe->isEmpty()) 
-        <p>Trenutno nema aktivnih posudbi</p>
-    @else
         <table border="1">
             <thead>
                 <tr>
@@ -23,10 +27,11 @@
                     <th>Datum povrata</th>
                     <th>Broj dana kasnjenja</th>
                     <th>Zakasnina placena?</th>
+                    <th>Akcije</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($posudbe as $posudba)
+                @forelse($posudbe as $posudba)
                 <tr>
                     <td>{{$posudba->id}}</td>
                     <td>{{$posudba->clan_id}}</td>
@@ -35,11 +40,22 @@
                     <td>{{$posudba->datumPovrata}}</td>
                     <td>{{$posudba->brojDanaKasnjenja}}</td>
                     <td>{{$posudba->zakasninaPlacena}}</td>
+                    <td>
+                        <form action="{{route('posudba.destroy', $posudba)}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Obrisi</button>
+                        </form>
+                    </td>
                 </tr>
-                @endforeach
+                @empty 
+                    <p>Trenutno nema aktivnih posudbi</p>
+
+                @endforelse
             </tbody>
         </table>
-    @endif
+
+    <p>Povratak na <a href="{{route('knjige.index')}}">popis knjiga</a></p>
     
 </body>
 </html>

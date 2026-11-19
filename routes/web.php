@@ -42,3 +42,6 @@ Route::get('posudbe/index', [PosudbaController::class, 'index'])->name('posudba.
 Route::get('posudbe/{primjerak}/create', [PosudbaController::class, 'create'])->name('posudba.create');
 Route::post('posudbe', [PosudbaController::class, 'store'])->name('posudba.store');
 
+
+Route::delete('posudbe/{posudba}', [PosudbaController::class, 'destroy'])->name('posudba.destroy');
+
