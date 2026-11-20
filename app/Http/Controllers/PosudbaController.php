@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Primjerak;
 use App\Models\Clan;
 use App\Models\Posudba;
@@ -11,8 +12,25 @@ class PosudbaController extends Controller
 {
     public function index() {
 
-        $posudbe=Posudba::get();
-        return view('posudbe.index', ['posudbe'=>$posudbe]);
+    $posudbe = DB::table('posudba')
+    ->leftJoin('clan', 'clan.id', '=', 'posudba.clan_id')
+    ->leftJoin('primjerak', 'primjerak.id', '=', 'posudba.primjerak_id')
+    ->leftJoin('knjiga', 'knjiga.id', '=', 'primjerak.knjiga_id')
+    ->select(
+        'posudba.id as posudba_id',
+        'primjerak.id as primjerak_id',
+        'clan.ime as clan_ime', 
+        'clan.prezime as clan_prezime', 
+        'clan.clanskiBroj as clan_clanskiBroj', 
+        'knjiga.naslov as knjiga_naslov', 
+        'knjiga.autor as knjiga_autor', 
+        'posudba.datumPosudbe as posudba_datumPosudbe', 
+        'posudba.datumPovrata as posudba_datumPovrata',
+        'posudba.brojDanaKasnjenja as posudba_brojDanaKasnjenja'
+        )
+    ->get();
+
+    return view('posudbe.index', ['posudbe'=>$posudbe]);
     }
 
     public function create(Primjerak $primjerak, Clan $clan) {
@@ -44,11 +62,12 @@ class PosudbaController extends Controller
         return redirect()->route('knjige.index')->with('uspjeh', 'Posudba je uspjesno kreirana');
     }
 
-    public function destroy(Posudba $posudba) {
+    public function destroy($posudba_id, $primjerak_id) {
 
-        $posudba->primjerak->where('id', $posudba->primjerak_id)->update(['posuden'=>'0']);
+        Posudba::where('id', $posudba_id)->delete();
 
-        $posudba->delete();
+        Primjerak::where('id', $primjerak_id)->update(['posuden'=>'0']);
+
         return redirect()->route('posudba.index')->with('uspjeh', 'Posudba je uspjesno izbrisana');
     }
 }

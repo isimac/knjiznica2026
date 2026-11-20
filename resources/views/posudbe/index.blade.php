@@ -20,28 +20,30 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Clan</th>
-                    <th>Primjerak</th>
+                    <th>Ime clana</th>
+                    <th>Prezime clana</th>
+                    <th>Clanski broj</th>
+                    <th>Naslov knjige</th>
+                    <th>Autor knjige</th>
                     <th>Datum posudbe</th>
                     <th>Datum povrata</th>
                     <th>Broj dana kasnjenja</th>
-                    <th>Zakasnina placena?</th>
                     <th>Akcije</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($posudbe as $posudba)
                 <tr>
-                    <td>{{$posudba->id}}</td>
-                    <td>{{$posudba->clan_id}}</td>
-                    <td>{{$posudba->primjerak_id}}</td>
-                    <td>{{$posudba->datumPosudbe}}</td>
-                    <td>{{$posudba->datumPovrata}}</td>
-                    <td>{{$posudba->brojDanaKasnjenja}}</td>
-                    <td>{{$posudba->zakasninaPlacena}}</td>
+                    <td>{{$posudba->clan_ime}}</td>
+                    <td>{{$posudba->clan_prezime}}</td>
+                    <td>{{$posudba->clan_clanskiBroj}}</td>
+                    <td>{{$posudba->knjiga_naslov}}</td>
+                    <td>{{$posudba->knjiga_autor}}</td>
+                    <td>{{$posudba->posudba_datumPosudbe}}</td>
+                    <td>{{$posudba->posudba_datumPovrata}}</td>
+                    <td>{{$posudba->posudba_brojDanaKasnjenja}}</td>
                     <td>
-                        <form action="{{route('posudba.destroy', $posudba)}}" method="post">
+                        <form action="{{route('posudba.destroy', [$posudba->posudba_id, $posudba->primjerak_id])}}" method="post">
                             @csrf
                             @method('DELETE')
                             <button type="submit">Obrisi</button>
