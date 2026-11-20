@@ -44,7 +44,11 @@ class PrimjerakController extends Controller
     }
 
     public function destroy(Primjerak $primjerak) {
+        if(!$primjerak->posuden) {
         $primjerak->delete();
         return redirect()->route('knjige.index')->with('uspjeh', 'Primjerak je uspjesno izbrisan');
+        } else {
+            return redirect()->route('knjige.index')->with('greska', 'Ne mozete izbrisati primjerak koji je trenutno posuden');
+        }
     }
 }
