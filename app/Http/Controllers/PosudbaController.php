@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Primjerak;
 use App\Models\Clan;
 use App\Models\Posudba;
+use App\Models\Knjiga;
 
 class PosudbaController extends Controller
 {
     public function index() {
+
+    $clanovi=Clan::get();
+    $knjige=Knjiga::get();
 
     $posudbe = DB::table('posudba')
     ->leftJoin('clan', 'clan.id', '=', 'posudba.clan_id')
@@ -30,8 +34,100 @@ class PosudbaController extends Controller
         )
     ->get();
 
-    return view('posudbe.index', ['posudbe'=>$posudbe]);
+    return view('posudbe.index', [
+        'posudbe'=>$posudbe,
+        'clanovi'=>$clanovi,
+        'knjige'=>$knjige
+        ]);
     }
+
+    public function indexFilter(Request $request) {
+
+    $clanovi=Clan::get();
+    $knjige=Knjiga::get();
+
+
+    if($request->knjiga_id=="empty" && $request->clan_id!="empty") {
+     $posudbe = DB::table('posudba')
+    ->leftJoin('clan', 'clan.id', '=', 'posudba.clan_id')
+    ->leftJoin('primjerak', 'primjerak.id', '=', 'posudba.primjerak_id')
+    ->leftJoin('knjiga', 'knjiga.id', '=', 'primjerak.knjiga_id')
+    ->select(
+        'posudba.id as posudba_id',
+        'primjerak.id as primjerak_id',
+        'clan.ime as clan_ime', 
+        'clan.prezime as clan_prezime', 
+        'clan.clanskiBroj as clan_clanskiBroj', 
+        'knjiga.naslov as knjiga_naslov', 
+        'knjiga.autor as knjiga_autor', 
+        'posudba.datumPosudbe as posudba_datumPosudbe', 
+        'posudba.datumPovrata as posudba_datumPovrata',
+        'posudba.brojDanaKasnjenja as posudba_brojDanaKasnjenja'
+        )
+    ->where('posudba.clan_id', $request->clan_id)
+    ->get();
+
+    return view('posudbe.index', [
+        'posudbe'=>$posudbe,
+        'clanovi'=>$clanovi,
+        'knjige'=>$knjige
+        ]);
+    } elseif ($request->clan_id=="empty" && $request->knjiga_id!="empty") {
+        $posudbe = DB::table('posudba')
+    ->leftJoin('clan', 'clan.id', '=', 'posudba.clan_id')
+    ->leftJoin('primjerak', 'primjerak.id', '=', 'posudba.primjerak_id')
+    ->leftJoin('knjiga', 'knjiga.id', '=', 'primjerak.knjiga_id')
+    ->select(
+        'posudba.id as posudba_id',
+        'primjerak.id as primjerak_id',
+        'clan.ime as clan_ime', 
+        'clan.prezime as clan_prezime', 
+        'clan.clanskiBroj as clan_clanskiBroj', 
+        'knjiga.naslov as knjiga_naslov', 
+        'knjiga.autor as knjiga_autor', 
+        'posudba.datumPosudbe as posudba_datumPosudbe', 
+        'posudba.datumPovrata as posudba_datumPovrata',
+        'posudba.brojDanaKasnjenja as posudba_brojDanaKasnjenja'
+        )
+    ->where('knjiga.id', $request->knjiga_id)
+    ->get();
+
+    return view('posudbe.index', [
+        'posudbe'=>$posudbe,
+        'clanovi'=>$clanovi,
+        'knjige'=>$knjige
+        ]);
+    } elseif ($request->clan_id!="empty" && $request->knjiga_id!="empty") {
+        $posudbe = DB::table('posudba')
+    ->leftJoin('clan', 'clan.id', '=', 'posudba.clan_id')
+    ->leftJoin('primjerak', 'primjerak.id', '=', 'posudba.primjerak_id')
+    ->leftJoin('knjiga', 'knjiga.id', '=', 'primjerak.knjiga_id')
+    ->select(
+        'posudba.id as posudba_id',
+        'primjerak.id as primjerak_id',
+        'clan.ime as clan_ime', 
+        'clan.prezime as clan_prezime', 
+        'clan.clanskiBroj as clan_clanskiBroj', 
+        'knjiga.naslov as knjiga_naslov', 
+        'knjiga.autor as knjiga_autor', 
+        'posudba.datumPosudbe as posudba_datumPosudbe', 
+        'posudba.datumPovrata as posudba_datumPovrata',
+        'posudba.brojDanaKasnjenja as posudba_brojDanaKasnjenja'
+        )
+    ->where('knjiga.id', $request->knjiga_id)
+    ->where('posudba.clan_id', $request->clan_id)
+    ->get();
+
+    return view('posudbe.index', [
+        'posudbe'=>$posudbe,
+        'clanovi'=>$clanovi,
+        'knjige'=>$knjige
+        ]);
+    } elseif($request->clan_id=="empty" && $request->knjiga_id=="empty") {
+        return redirect()->route('posudba.index');
+    }
+
+    }//kraj indexFilter metode
 
     public function create(Primjerak $primjerak, Clan $clan) {
 

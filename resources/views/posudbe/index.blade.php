@@ -16,6 +16,36 @@
     {{session('greska')}}
     @endif
 
+    <h5>Filtritaj posudbe<h5>
+        <br>
+    <h5><a href="{{route('posudba.index')}}">Resetiraj filtere</a></h5>
+    <br>
+    <form action="{{route('posudba.index.filter')}}" method="post">
+        @csrf
+        <label for="clan_id">Izaberite clana: </label>
+        <select name="clan_id" id="clan_id">
+        <option value="empty">Svi clanovi</option>
+        @foreach($clanovi as $clan)
+        <option value="{{$clan->id}}">{{$clan->ime}} {{$clan->prezime}} (ID: {{$clan->id}})</option>
+        @endforeach
+        </select>
+
+        
+        <select name="knjiga_id" id="knjiga_id">
+        <label for="knjiga_id">Izaberite knjigu</label>
+        <option value="empty">Sve knjige</option>
+        @foreach($knjige as $knjiga)
+        <option value="{{$knjiga->id}}">{{$knjiga->naslov}}</option>
+        @endforeach
+        </select>
+
+        <button type="submit">Filtriraj</button>
+    </form>
+
+
+    
+    
+
     <h3><strong>Aktivne posudbe</h3>
         <table border="1">
             <thead>

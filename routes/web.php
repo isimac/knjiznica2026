@@ -38,6 +38,7 @@ Route::resource('clan', ClanController::class)->parameters(['clanovi'=>'clan']);
 //_____________________Rute za Posudbu___________________________________________________
 
 Route::get('posudbe/index', [PosudbaController::class, 'index'])->name('posudba.index');
+Route::post('posudbe/index', [PosudbaController::class, 'indexFilter'])->name('posudba.index.filter');
 
 Route::get('posudbe/{primjerak}/create', [PosudbaController::class, 'create'])->name('posudba.create');
 Route::post('posudbe', [PosudbaController::class, 'store'])->name('posudba.store');
