@@ -73,6 +73,7 @@
                     <td>{{$posudba->posudba_datumPovrata}}</td>
                     <td>{{$posudba->posudba_brojDanaKasnjenja}}</td>
                     <td>
+                        <a href="{{route('posudba.edit', $posudba->posudba_id)}}">Uredi</a>
                         <form action="{{route('posudba.destroy', [$posudba->posudba_id, $posudba->primjerak_id])}}" method="post">
                             @csrf
                             @method('DELETE')

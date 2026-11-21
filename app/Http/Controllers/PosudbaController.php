@@ -158,12 +158,38 @@ class PosudbaController extends Controller
         return redirect()->route('knjige.index')->with('uspjeh', 'Posudba je uspjesno kreirana');
     }
 
+    public function edit($posudba) {
+        $trazenaPosudba = Posudba::findOrFail($posudba);
+        return view('posudbe/edit', ['trazenaPosudba'=>$trazenaPosudba]);
+    }
+
+    public function update(Request $request, $trazenaPosudba) {
+
+
+        if ($request->zakasninaPlacena=="1") {
+            Posudba::where('id', $trazenaPosudba)
+                ->update(['zakasninaPlacena' => '1']);
+            return redirect()->route('posudba.index')->with('uspjeh', 'Placanje je evidentirano');
+
+            }
+            else {
+                return redirect()->route('posudba.index');
+            }
+    }
+
     public function destroy($posudba_id, $primjerak_id) {
 
-        Posudba::where('id', $posudba_id)->delete();
+        $posudba = Posudba::where('id', $posudba_id)->firstOrFail();
+        $potvrdaPlacanja = $posudba->zakasninaPlacena;
 
-        Primjerak::where('id', $primjerak_id)->update(['posuden'=>'0']);
+        if ($potvrdaPlacanja==1) {
 
-        return redirect()->route('posudba.index')->with('uspjeh', 'Posudba je uspjesno izbrisana');
+            Posudba::where('id', $posudba_id)->delete();
+            Primjerak::where('id', $primjerak_id)->update(['posuden'=>'0']);
+
+            return redirect()->route('posudba.index')->with('uspjeh', 'Posudba je uspjesno izbrisana');
+        } else {
+            return redirect()->route('posudba.index')->with('greska', 'Posudba ne moze biti izbrisana jer ima neplacenu zakasninu');
+        }
     }
 }

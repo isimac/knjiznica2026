@@ -43,6 +43,11 @@ Route::post('posudbe/index', [PosudbaController::class, 'indexFilter'])->name('p
 Route::get('posudbe/{primjerak}/create', [PosudbaController::class, 'create'])->name('posudba.create');
 Route::post('posudbe', [PosudbaController::class, 'store'])->name('posudba.store');
 
+Route::get('posudbe/index/{posudba}', [PosudbaController::class, 'edit'])->name('posudba.edit');
+Route::put('/posudbe/{trazenaPosudba}', [PosudbaController::class, 'update'])->name('posudba.update');
+
+
+
 
 Route::delete('posudbe/{posudba_id}/{primjerak_id}', [PosudbaController::class, 'destroy'])->name('posudba.destroy');
 
