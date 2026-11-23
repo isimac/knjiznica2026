@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KnjigaController;#moramo dodati kontroler
 use App\Http\Controllers\PrimjerakController;
 use App\Http\Controllers\ClanController;
+use App\Http\Controllers\PosudbaController;
 
 Route::get('/', function () {
     return redirect()->route('knjige.index');#nemoj mi pokazivati početnu stranicu, preusmjeri me na rutu knjige.index; redirect->ako negdje zapnemo kada refreshamo preko http protokola šaljemo želju da se ponovno osvježe svi podaci
@@ -32,3 +33,7 @@ Route::post('/clanovi', [ClanController::class, 'store'])->name('clanovi.store')
 Route::get('/clanovi/{clan}/edit', [ClanController::class, 'edit'])->name('clanovi.edit');
 Route::put('/clanovi/{clan}', [ClanController::class, 'update'])->name('clanovi.update');
 Route::delete('/clanovi/{clan}', [ClanController::class, 'destroy'])->name('clanovi.destroy');
+
+Route::get('/posudbe', [PosudbaController::class, 'index'])->name('posudbe.index');
+Route::get('/posudbe/create', [PosudbaController::class, 'create'])->name('posudbe.create');
+Route::post('/posudbe', [PosudbaController::class, 'store'])->name('posudbe.store');
