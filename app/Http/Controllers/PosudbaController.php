@@ -8,6 +8,7 @@ use App\Models\Primjerak;
 use App\Models\Clan;
 use App\Models\Posudba;
 use App\Models\Knjiga;
+use Carbon\Carbon;
 
 class PosudbaController extends Controller
 {
@@ -33,6 +34,20 @@ class PosudbaController extends Controller
         'posudba.brojDanaKasnjenja as posudba_brojDanaKasnjenja'
         )
     ->get();
+
+    //izracunavanje razlike u danima 
+    foreach($posudbe as $posudba) {
+    $rokPovrata = Carbon::parse($posudba->posudba_datumPovrata);
+    $trenutniDatum = Carbon::now();
+
+    if ($trenutniDatum->greaterThan($rokPovrata)) {
+        $posudba->posudba_brojDanaKasnjenja = (int) $rokPovrata->diffInDays($trenutniDatum);
+        Posudba::where('id', $posudba->posudba_id)->update(['brojDanaKasnjenja' => $posudba->posudba_brojDanaKasnjenja, 'zakasninaPlacena' => 1]);
+    } else {
+        $posudba->posudba_brojDanaKasnjenja = 0;
+        Posudba::where('id', $posudba->posudba_id)->update(['brojDanaKasnjenja' => 0, 'zakasninaPlacena' => 0]);
+        }
+    }
 
     return view('posudbe.index', [
         'posudbe'=>$posudbe,
@@ -165,14 +180,22 @@ class PosudbaController extends Controller
 
     public function update(Request $request, $trazenaPosudba) {
 
-
-        if ($request->zakasninaPlacena=="1") {
+        if ($request->filled('datumPovrata'))  {
             Posudba::where('id', $trazenaPosudba)
-                ->update(['zakasninaPlacena' => '1']);
-            return redirect()->route('posudba.index')->with('uspjeh', 'Placanje je evidentirano');
+                ->update(['datumPovrata' => $request->datumPovrata]);
+        }
 
+
+        if ($request->zakasninaPlacena=="2") {
+            Posudba::where('id', $trazenaPosudba)
+                ->update(['zakasninaPlacena' => '2' , 'datumPovrata'=>date('Y/m/d', strtotime('+100000 days'))]);
+            return redirect()->route('posudba.index')->with('uspjeh', 'Placanje je evidentirano, brisanje posudbe moguce');
             }
-            else {
+            elseif ($request->zakasninaPlacena=="1") {
+                Posudba::where('id', $trazenaPosudba)
+                ->update(['zakasninaPlacena' => '1']);
+                return redirect()->route('posudba.index');
+            } else {
                 return redirect()->route('posudba.index');
             }
     }
@@ -182,7 +205,10 @@ class PosudbaController extends Controller
         $posudba = Posudba::where('id', $posudba_id)->firstOrFail();
         $potvrdaPlacanja = $posudba->zakasninaPlacena;
 
-        if ($potvrdaPlacanja==1) {
+        //0 - nema zakasnine
+        //1 - ima zakasnine, neplacena
+        //2 - bilo je zakasnine, placena 
+        if ($potvrdaPlacanja==0 || $potvrdaPlacanja==2) {
 
             Posudba::where('id', $posudba_id)->delete();
             Primjerak::where('id', $primjerak_id)->update(['posuden'=>'0']);

@@ -11,11 +11,17 @@
      <form action="{{route('posudba.update', $trazenaPosudba)}}" method="post">
         @csrf
         @method('PUT')
+        <label>Unesite novi rok povrata</label>
+        <input type="date" name="datumPovrata">
+        <br>
 
-        <input type="radio" id="placanjeDa" name="zakasninaPlacena" value="1">
+        @if($trazenaPosudba->brojDanaKasnjenja!=0)
+        <h5>Potvrdite da je zakasnina placena</h5>
+        <input type="radio" id="placanjeDa" name="zakasninaPlacena" value="2">
         <label for="placanjeDa">DA</label><br>
-        <input type="radio" id="placanjeNe" name="zakasninaPlacena" value="0">
+        <input type="radio" id="placanjeNe" name="zakasninaPlacena" value="1">
         <label for="placanjeNe">NE</label><br>
+        @endif
 
         <button type="submit">Posalji</button>
      </form>

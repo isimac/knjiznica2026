@@ -57,7 +57,7 @@
                     <th>Autor knjige</th>
                     <th>Datum posudbe</th>
                     <th>Datum povrata</th>
-                    <th>Broj dana kasnjenja</th>
+                    <th>Broj dana kasnjenja </th>
                     <th>Akcije</th>
                 </tr>
             </thead>
@@ -73,7 +73,8 @@
                     <td>{{$posudba->posudba_datumPovrata}}</td>
                     <td>{{$posudba->posudba_brojDanaKasnjenja}}</td>
                     <td>
-                        <a href="{{route('posudba.edit', $posudba->posudba_id)}}">Uredi</a>
+                        <a href="{{route('posudba.edit', $posudba->posudba_id)}}">Uredivanje i placanje</a>
+                        
                         <form action="{{route('posudba.destroy', [$posudba->posudba_id, $posudba->primjerak_id])}}" method="post">
                             @csrf
                             @method('DELETE')
