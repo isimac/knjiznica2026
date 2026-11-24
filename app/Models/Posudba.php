@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Posudba extends Model
 {
@@ -10,7 +11,11 @@ class Posudba extends Model
     protected $fillable=['id_clan', 'id_primjerak','datumPosudbe', 'datumPovrata', 'brojDanaKasnjenja', 'zakasninaPlacena'];
 
 
-    //ovdje nadodati cast
+    //ovdje nadodati casts ->nalazi se ispod
+    protected $casts=[
+        'datumPosudbe'=>'date',
+        'datumPovrata'=>'date'
+    ];
 
     public function clan(): BelongsTo
     {
