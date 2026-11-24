@@ -9,6 +9,7 @@ use App\Models\Posudba;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 
 
@@ -38,8 +39,8 @@ class PosudbaController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $podaci=$request->validate([
-            'clan_id'=>['required', 'integer', 'exists:clan, id'],
-            'primjerak_id'=>['required', 'integer', 'exists:primjerak, id']
+            'clan_id'=>['required', 'integer', 'exists:clan,id'],
+            'primjerak_id'=>['required', 'integer', 'exists:primjerak,id']
         ]);
 
         DB::transaction(function () use ($podaci)
@@ -60,7 +61,7 @@ class PosudbaController extends Controller
                 'clan_id'=>$podaci['clan_id'],
                 'primjerak_id'=>$podaci['primjerak_id'],
                 'datumPosudbe'=>$datumPosudbe->toDateString(),
-                'datumPovrata'=>$datumPosudbe->copy()->addDay(30)->toDateString(),
+                'datumPovrata'=>null,
                 'brojDanaKasnjenja'=>null,
                 'zakasninaPlacena'=>false
                ]); 
@@ -68,5 +69,60 @@ class PosudbaController extends Controller
 
         return redirect()->route('posudbe.index')
                             ->with('uspjeh', 'Posudba je evidentirana');
+    }
+
+    public function povrat(Posudba $posudba): RedirectResponse
+    {
+        DB::transaction(function () use ($posudba)
+        {
+            /*
+            $primjerak=\App\Models\Primjerak::whereKey($posudba->primjerak_id)
+                        ->lockForUpdate()
+                        ->firstOrFail();
+                        //ovo koristmo kada nemam use \... u zaglavlju ove skripte
+            */
+            $primjerak=Primjerak::whereKey($posudba->primjerak_id)
+                        ->lockForUpdate()
+                        ->firstOrFail();
+
+            $posudba=Posudba::whereKey($posudba->id)
+                        ->lockForUpdate()
+                        ->firstOrFail();
+
+            if ($posudba->datumPovrata!==null)
+                {
+                    throw ValidationException::withMessages([
+                        'povrat'=>'Povrat je već evidentiran'
+                    ]);
+                }
+            $datumPovrata=today();
+            $datumPosudbe=$posudba->datumPosudbe;
+            //brojDanaKasnjenja=datumPovrata - datumPosudbe
+            $brojDanaKasnjenja=$datumPosudbe->diffInDays($datumPovrata)-30;
+
+            if ($brojDanaKasnjenja<0)
+                {
+                    $brojDanaKasnjenja=0;
+                }
+            $posudba->update([
+                'datumPovrata'=>$datumPovrata->toDateString(),
+                'brojDanaKasnjenja'=>$brojDanaKasnjenja
+            ]);
+        }, 3);
+
+        return redirect()->route('posudbe.index')
+            ->with('uspjeh', 'Povrat je uspješno evidentiran');
+
+    }
+
+    public function zakasnjele(): View
+    {
+        $posudbe=Posudba::with(['clan', 'primjerak.knjiga'])
+            ->whereNull('datumPovrata')
+            ->where('datumPosudbe', '<', today()->subDays(30))
+            ->orderBy('datumPosudbe')
+            ->get();
+
+            return view('posudbe.zakasnjele', ['posudbe'=>$posudbe]);
     }
 }

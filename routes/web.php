@@ -74,3 +74,11 @@ Route::get('/posudbe/create', [PosudbaController::class, 'create'])
 
 Route::post('/posudbe', [PosudbaController::class, 'store'])->name('posudbe.store');
 
+Route::patch('/posudbe/{posudba}/povrat', [PosudbaController::class, 'povrat'])
+                ->name('posudbe.povrat');
+
+Route::get('/posudbe/zakasnjele', [PosudbaController::class, 'zakasnjele'])
+            ->name('posudbe.zakasnjele');
+
+Route::get('/posudbe/povijest', [PosudbeController::class, 'povijest'])
+            ->name('posudbe.povijest');

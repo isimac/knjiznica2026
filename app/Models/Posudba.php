@@ -11,7 +11,10 @@ class Posudba extends Model
     protected $fillable=['clan_id', 'primjerak_id', 'datumPosudbe', 'datumPovrata', 'brojDanaKasnjenja', 'zakasninaPlacena'];
 
 
-        //ovdje nadodati cast
+        protected $casts=[
+            'datumPosudbe'=>'date',
+            'datumPovrata'=>'date'
+        ];
 
     public function clan(): BelongsTo 
     {
