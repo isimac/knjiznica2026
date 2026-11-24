@@ -10,7 +10,11 @@ class Posudba extends Model
     protected $table = "posudba";
     protected $fillable = ['clan_id', 'primjerak_id', 'datumPosudbe', 'datumPovrata', 'brojDanaKasnjenja', 'zakasninaPlacena'];
 
-    //nadodati cast
+    //nadodati cast->da datume možemo koristiti kao brojeve
+    protected $casts=[
+        'datumPosudbe'=>'date',
+        'datumPovrata'=>'date'
+    ];
 
     public function primjerak(): BelongsTo
     {

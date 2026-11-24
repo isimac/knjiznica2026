@@ -9,6 +9,7 @@ use App\Models\Posudba;#uzimamo model čiji kontroler radimo i modele s kojima s
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;#da možemo koristiti transakcije
+use Illuminate\Validation\ValidationException;
 
 class PosudbaController extends Controller
 {
@@ -36,8 +37,8 @@ class PosudbaController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $podaci = $request->validate([
-            'clan_id' => ['required', 'integer', 'exists:clan, id'],
-            'primjerak_id' => ['required', 'integer', 'exists:primjerak, id']
+            'clan_id' => ['required', 'integer', 'exists:clan,id'],#ne smije biti razmak u exists!!!
+            'primjerak_id' => ['required', 'integer', 'exists:primjerak,id']
         ]);#exists-> provjeravamo postoji li taj clan_id u tablici clan na mjestu id
         DB::transaction(function () use ($podaci)#koristimo use jer anonimna funkcija nema pristup podacima koji su stvoreni izvan nje; use koristimo da ona može koristiti te podatke (kao da su stvoreni unutar nje)
         {
@@ -57,12 +58,59 @@ class PosudbaController extends Controller
                 'clan_id' => $podaci['clan_id'],
                 'primjerak_id' => $podaci['primjerak_id'],
                 'datumPosudbe' => $datumPosudbe->toDateString(),#lakše je tako pospremiti podatke
-                'datumPovrata' => $datumPosudbe->copy()->addDay(30)->toDateString(),#izrađujemo kopiju (vrijednosti)onoga što piše u datumPosudbe i dodajemo 30 dana na tu vrijednost
+                'datumPovrata' => null,# NE MOŽEMO IMATI OVO $datumPosudbe->copy()->addDay(30)->toDateString() zato što ona nema posudbe koja u datum povrata ima null,#izrađujemo kopiju (vrijednosti)onoga što piše u datumPosudbe i dodajemo 30 dana na tu vrijednost
                 'brojDanaKasnjenja' => null,
                 'zakasninaPlacena' => false
             ]);
         }, 3);#3 označava maksimalni broj pokušaja u slučaju da se baza deadlocka, ako transakcija ne prođe 3 puta, onda će laravel izbaciti exception, da nismo ništa stavili onda bi se samo 1 pokušala, 3-5 se stavlja
         return redirect()->route('posudbe.index')
                             ->with('uspjeh', 'Posudba je evidentirana!');
+    }
+
+    public function povrat(Posudba $posudba):RedirectResponse
+    {
+        DB::transaction( function () use ($posudba)
+        {
+            /*$primjerak = \App\Models\Primjerak::whereKey($posudba->primjerak_id)
+                            ->lockForUpdate()
+                            ->firstOrFail();*/
+            $primjerak = Primjerak::whereKey($posudba->primjerak_id)#tražimo primjerak koji je u toj posudbi
+                            ->lockForUpdate()#zaključavamo ga
+                            ->firstOrFail();
+            $posudba = Posudba::whereKey($posudba->id)#poziva se ponovno posudba jer se neko stanje već moglo izmijeniti prije početka transakcije
+                            ->lockForUpdate()
+                            ->firstOrFail();
+            if($posudba->datumPovrata !== null)#znači da je povrat već obavljen, druga kontrola prije prčkanja po bazi podataka
+                {
+                    throw ValidationException::withMessages(['povrat'=>'Povrat je već evidentiran!']);
+                }
+
+            $datumPovrata=today();
+            $datumPosudbe = $posudba->datumPosudbe;
+            #$brojDanaKasnjenja = $datumPovrata - $datumPosudbe
+            $brojDanaKasnjenja = $datumPosudbe->diffInDays($datumPovrata)-30;#carbonova funckija za izračun razlike, stavljamo s kojim datumom oduzimamo, daje apsolutnu vrijednost pa je svejedno s kojim datumom se oduzima
+                                        #oduzimamo s 30 da dobijemo stvarne dane kašnjenja je max osoba smije držati 30 dana knjigu kod sebe
+            if($brojDanaKasnjenja < 0)
+                {
+                    $brojDanaKasnjenja = 0;
+                }
+        
+                $posudba->update([
+                    'datumPovrata' => $datumPovrata->toDateString(),
+                    'brojDanaKasnjenja' => $brojDanaKasnjenja
+                ]);
+        },3);
+        return redirect()->route('posudbe.index')->with('uspjeh', 'Povrat je uspješno evidentiran');
+    }
+    
+    public function zakasnjele():View
+    {
+        $posudbe = Posudba::with(['clan', 'primjerak.knjiga'])
+                            ->whereNull('datumPovrata')
+                            ->where('datumPosudbe', '<', today()->subDays(30))#od današnjeg dana oduzmi 30, ako je taj broj manji od datuma posudbe, ta osoba kasni s povratom
+                            ->orderBy('datumPosudbe')
+                            ->get();
+        
+        return view('posudbe.zakasnjele', ['posudbe' => $posudbe]);
     }
 }

@@ -37,3 +37,7 @@ Route::delete('/clanovi/{clan}', [ClanController::class, 'destroy'])->name('clan
 Route::get('/posudbe', [PosudbaController::class, 'index'])->name('posudbe.index');
 Route::get('/posudbe/create', [PosudbaController::class, 'create'])->name('posudbe.create');
 Route::post('/posudbe', [PosudbaController::class, 'store'])->name('posudbe.store');
+
+Route::patch('/posudbe/{posudba}/povrat', [PosudbaController::class, 'povrat'])->name('posudbe.povrat');#kada želimo promijeniti 1 atribut
+Route::get('/posudbe/povijest', [PosudbaController::class, 'povijest'])->name('posudbe.povijest');
+Route::get('/posudbe/zakasnjele', [PosudbaController::class, 'zakasnjele'])->name('posudbe.zakasnjele');
