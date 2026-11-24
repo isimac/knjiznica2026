@@ -10,8 +10,11 @@ class Posudba extends Model
     protected $table="posudba";
     protected $fillable=['clan_id', 'primjerak_id', 'datumPosudbe', 'datumPovrata', 'brojDanaKasnjenja', 'zakasninaPlacena'];
 
-
-        //ovdje nadodati cast
+    //CAST 
+    // - doslovno promini ovaj tip podatka u neki specifican nacin zapisa
+    // - Ode smo zapisali ove fieldove iz tablea kao Carbon objekte za datume
+    // - Carbon je Laravel biblioteka sa all-things-datumi, prouciti - ima svasta korisnoga 
+    protected $casts=['datumPosudbe'=>'date', 'datumPovrata'=>'date'];
 
     public function clan(): BelongsTo 
     {
