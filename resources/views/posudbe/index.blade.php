@@ -8,6 +8,15 @@
 <body>
     <h1>Aktivne posudbe</h1>
     <br>
+    @auth
+        <p>Prijavljen korisnik: <strong>{{auth()->user()->name}}</strong></p>
+    @endauth
+    <br>
+    <form action="{{route('logout')}}" method="post">
+        @csrf
+        <button type="submit">Odjava</button>
+    </form>
+    <br>
     <a href="{{route('posudbe.create')}}">Kreiraj novu posudbu</a>
     <br>
     @if(session('uspjeh')) {{session('uspjeh')}}

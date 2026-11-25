@@ -5,6 +5,11 @@ use App\Http\Controllers\KnjigaController;
 use App\Http\Controllers\PrimjerakController;
 use App\Http\Controllers\ClanController;
 use App\Http\Controllers\PosudbaController;
+use App\Http\Controllers\AuthController;
+
+Route::middleware('auth')->group(function() {
+
+
 
 Route::get('/', function () {
     return redirect()->route('knjige.index');
@@ -80,3 +85,27 @@ Route::get('/posudbe/zakasnjele', [PosudbaController::class, 'zakasnjele'])->nam
 
 Route::get('/posudbe/povijest', [PosudbaController::class, 'povijest'])->name('posudbe.povijest');
 
+}); //__KRAJ RUTA IZ GRUPE AUTH_________________________________________________________________________________________________
+
+//______________________________Rute za Auth___________________________________
+
+//___GRUPA GUEST
+Route::middleware('guest')->group(function () { 
+    //middleware guest prikazuje rute neprijavljenim korisnicima 
+    //Tu su showLogin i login, naravno da neprijavljeni korisnik triba njih da bi se logira 
+    //jednom kad se logiram necu vise dobijat ove rute, sto ce mi login kad sam logiran
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('showLogin');
+
+    Route::post('/login', [AuthController::class, 'login'])
+    ->middleware('throttle:5,1')    //ogranicava broj zahtjeva na ovu rutu na 5 puta u minuti maksimalno
+    ->name('login');
+
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+
+    Route::post('/register', [AuthController::class, 'register'])->name('register.store');
+
+}); //_______________KRAJ GRUPE GUEST____________________________
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')            
+    ->name('logout');

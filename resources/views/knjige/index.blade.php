@@ -16,6 +16,8 @@
     <h1>Informacijski sustav knjižnice</h1>
     <a href="{{route('clanovi.create')}}">Upravljanje clanovima</a>
     <br>
+    <a href="{{route('posudbe.index')}}">Upravljanje posudbama</a>
+    <br>
     <a href="{{route('knjige.create')}}">Dodaj novu knjigu</a>
     <br>
     @if(session('uspjeh'))
