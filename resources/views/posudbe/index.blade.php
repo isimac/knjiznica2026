@@ -7,6 +7,13 @@
 </head>
 <body>
     <h1>Aktivne posudbe</h1>
+    @auth
+        <p>Prijavljen korisnik: <strong>{{auth()->user()->name}}</strong></p><!-- user() je metoda koja vraća objekt logiranog korisnika-->
+    @endauth
+    <form action="{{route('logout')}}" method="post">
+        @csrf
+        <button type="submit">Odjava</button>
+    </form>
     <a href="{{route('posudbe.create')}}">Unos nove posudbe</a>
     <br>
     @if(session('uspjeh'))
