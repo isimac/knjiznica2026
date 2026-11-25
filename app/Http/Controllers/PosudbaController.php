@@ -109,7 +109,7 @@ class PosudbaController extends Controller
         ->orderBy('datumPosudbe')
         ->get();
 
-        return view('posudbe.zakasnjele', ['posudbe'=>$posudbe])
+        return view('posudbe.zakasnjele', ['posudbe'=>$posudbe]);
     }
 
 }

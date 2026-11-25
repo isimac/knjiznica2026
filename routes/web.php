@@ -5,8 +5,10 @@ use App\Http\Controllers\KnjigaController;
 use App\Http\Controllers\PrimjerakController;
 use App\Http\Controllers\ClanController;
 use App\Http\Controllers\PosudbaController;
+use App\Http\Controllers\AuthController;
 
-
+Route::middleware('auth')->group(function()
+{
 Route::get('/', function () {           //ova ruta objavljuje početnu adresu - izbrisali smo welcome ispod
     return redirect()->route('knjige.index');       //redirect je preusmjeravanje
 });     //
@@ -14,7 +16,7 @@ Route::get('/', function () {           //ova ruta objavljuje početnu adresu - 
 Route::get('/knjige', [KnjigaController::class, 'index'])->name('knjige.index');   //get je dohvati mi, /knjige je ruta, name je da je ruta dobila naziv
 Route::get('/knjige/create', [KnjigaController::class, 'create'])->name('knjige.create');
 Route::post('knjige', [KnjigaController::class, 'store'])->name('knjige.store');
-//ovjde nastavljamo idući put
+//ovdje nastavljamo idući put
 Route::get('/knjige/{knjiga}/edit', [KnjigaController::class, 'edit'])->name('knjige.edit');
 Route::put('/knjige/{knjiga}', [KnjigaController::class, 'update'])->name('knjige.update');
 Route::delete('/knjige/{knjiga}', [KnjigaController::class, 'destroy'])->name('knjige.destroy');
@@ -39,3 +41,16 @@ Route::patch('/posudbe/{posudba}/povrat', [PosudbaController::class, 'povrat'])-
 Route::get('\posudbe\zakasnjele', [PosudbaController::class, 'zakasnjele'])->name('posudbe.zakasnjele');
 
 Route::get('/posudbe/povijest', [PosudbeController::class, 'povijest'])->name('posudbe.povijest');
+});
+Route::middleware('guest')->group(function()
+{
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.store');
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::get('/register', [AuthController::class, 'showRegister'])->middleware('guest')->name('register');
+
+Route::post('/register', [AuthController::class, 'register'])->middleware('guest')->name('register.store');
