@@ -5,6 +5,12 @@ use App\Http\Controllers\KnjigaController;
 use App\Http\Controllers\PrimjerakController;
 use App\Http\Controllers\ClanController;
 use App\Http\Controllers\PosudbaController;
+use App\Http\Controllers\AuthController;
+
+Route::middleware('auth')->group(function ()
+{
+
+
 
 Route::get('/', function () {
     return redirect()->route('knjige.index');
@@ -82,3 +88,23 @@ Route::get('/posudbe/zakasnjele', [PosudbaController::class, 'zakasnjele'])
 
 Route::get('/posudbe/povijest', [PosudbeController::class, 'povijest'])
             ->name('posudbe.povijest');
+});
+
+Route::middleware('guest')->group(function()
+{
+    Route::get('/login', [AuthController::class, 'showLogin'])
+    ->name('login');
+
+    Route::post('/login', [AuthController::class, 'login'])
+    ->middleware('throttle:5,1')->name('login.store');
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')->name('logout');
+
+
+Route::get('/register', [AuthController::class, 'showRegister'])
+    ->middleware('guest')->name('register');
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->middleware('guest')->name('register.store');
